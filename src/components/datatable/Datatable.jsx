@@ -29,7 +29,7 @@ const Datatable = ({columns}) => {
     return () => {
       unsub();
     };
-  }, [type]); 
+  }, [type]);  
 
   const handleDelete = async (id) => {
     try {

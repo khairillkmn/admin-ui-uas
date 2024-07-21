@@ -4,10 +4,15 @@ import Navbar from "../../components/navbar/Navbar";
 import Chart from "../../components/chart/Chart";
 import Datatable from "../../components/datatable/Datatable";
 import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../firebase";
 
 const Single = ({columns}) => {
   const location = useLocation();
   const id = location.pathname.split('/')[2];
+  const type = location.pathname.split('/')[1];
+  const [data, setData] = useState({});
 
   return (
     <div className="single">
