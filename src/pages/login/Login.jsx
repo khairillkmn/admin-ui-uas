@@ -1,62 +1,52 @@
-import { useState } from "react";
-import Home from "./pages/home/Home";
-import Login from "./pages/login/Login";
-import List from "./pages/list/List";
-import MyList from "./pages/mylist/MyList";
-import Single from "./pages/single/Single";
-import New from "./pages/new/New";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { productInputs, userInputs } from "./formsource";
-import "./style/dark.scss";
-import { useContext } from "react";
-import { DarkModeContext } from "./context/darkModeContext";
-import { AuthContext } from "./context/AuthContext";
+import "./login.scss"; 
+import { useContext, useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
+const Login = () => { 
+  const [error, setError] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-function App() {
-  const { darkMode } = useContext(DarkModeContext);
+  const navitage = useNavigate();
 
-  const { currentUser } = useContext(AuthContext)
+  const {dispatch} = useContext(AuthContext);
 
-  const RequireAuth = ({ children }) => {
-    return currentUser ? children : <Navigate to="/login" />;
-  };
-  
-  const NotRequireAuth = ({ children }) => {
-    return currentUser ? <Navigate to="/" /> : children;
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user; 
+        dispatch({type:"LOGIN",payload:user})
+        console.log(user);
+      })
+      .catch((error) => {
+        setError(true);
+      });
   };
 
   return (
-    <div className={darkMode ? "app dark" : "app"}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/">
-            <Route path="login" element={<NotRequireAuth><Login /></NotRequireAuth>}></Route>
-            <Route index element={<RequireAuth><Home /></RequireAuth>}></Route>
-            <Route path="users">
-              <Route index element={<RequireAuth><List /></RequireAuth>}></Route>
-              <Route path=":userId" element={<RequireAuth><Single /></RequireAuth>}></Route>
-              <Route
-                path="new"
-                element={<RequireAuth><New inputs={userInputs} title="Add New User" /></RequireAuth>}
-              />
-            </Route>
-            <Route path="products">
-              <Route index element={<RequireAuth><List /></RequireAuth>}></Route>
-              <Route path=":productId" element={<RequireAuth><Single /></RequireAuth>}></Route>
-              <Route
-                path="new"
-                element={<RequireAuth><New inputs={productInputs} title="Add New Product" /></RequireAuth>}
-              />
-            </Route>
-            <Route path="categories">
-              <Route index element={<RequireAuth><MyList /></RequireAuth>}></Route>
-            </Route>
-          </Route>
-        </Routes>
-      </BrowserRouter>
+    <div className="login">
+      <form onSubmit={handleLogin}>
+        <input
+          type="email"
+          placeholder="email" 
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="password" 
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="submit">Login</button>
+        {error && <span>Wrong email or password!</span>}
+      </form>
     </div>
   );
-}
+};
 
-export default App;
+export default Login;
