@@ -2,6 +2,7 @@ import "./single.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import Chart from "../../components/chart/Chart";
+import List from "../../components/datatable/Datatable";
 import Datatable from "../../components/datatable/Datatable";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -45,30 +46,30 @@ const Single = ({columns}) => {
       <div className="singleContainer">
         <Navbar />
         <div className="top">
-        <div className="left">
-          <div className="editButton">Detail</div>
-          <h1 className="title">Information</h1>
-          <div className="item">
-            <img
-              src={data.img}
-              alt=""
-              className="itemImg"
-            />              
-            <div className="details">
-              <h1 className="itemTitle">
-                {data.detailName}
-              </h1> 
+                <div className="left">
+                  <div className="editButton">Detail</div>
+                    <h1 className="title">Information</h1>
+                      <div className="item">
+                        <img
+                          src={data.img}
+                          alt=""
+                          className="itemImg"
+                        />              
+                        <div className="details">
+                          <h1 className="itemTitle">
+                            {data.detailName}
+                          </h1> 
 
-              {keys.map((key) => (
-                <div className="detailItem" key={key}>
-                  <span className="itemKey">{key}:</span>
-                  <span className="itemValue">{data[key]}</span>
-                </div>
-              ))} 
+                          {keys.map((key) => (
+                            <div className="detailItem" key={key}>
+                              <span className="itemKey">{key}:</span>
+                              <span className="itemValue">{data[key]}</span>
+                            </div>
+                          ))} 
 
-            </div>
-          </div>
-        </div>
+                        </div>
+                      </div>
+                  </div>
           <div className="right">
             <Chart aspect={3 / 1} type="order" />
           </div>
